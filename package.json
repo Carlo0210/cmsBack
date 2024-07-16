@@ -1,0 +1,49 @@
+{
+  "name": "scraping",
+  "version": "1.0.0",
+  "description": "Web scraping with Playwright and MERN stack",
+  "main": "server.js",
+  "scripts": {
+    "scraper": "node scraper.ts",
+    "scraperService": "node scraperService.js",
+    "scrapeProviderDetails": "node scrapeProviderDetails.js",
+    "server": "npx nodemon server.js",
+    "client": "cd frontend && npm start",
+    "dev": "concurrently \"npx nodemon server.js\" \"npm run client\""
+  },
+  "keywords": [
+    "Web",
+    "Scraping",
+    "Playwright",
+    "MERN"
+  ],
+  "author": "CD",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^3.2.5",
+    "async-sema": "^3.1.1",
+    "axios": "^1.7.2",
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
+    "cheerio": "^1.0.0-rc.12",
+    "concurrently": "^8.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-validator": "^7.1.0",
+    "mongoose": "^8.4.0",
+    "mongoose-paginate": "^5.0.3",
+    "multer": "^1.4.5-lts.1",
+    "node-cron": "^3.0.3",
+    "p-limit": "^5.0.0",
+    "p-retry": "^6.2.0",
+    "playwright": "^1.44.1",
+    "prettier": "^3.2.5",
+    "random-useragent": "^0.5.0",
+    "socket.io": "^4.7.5"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "nodemon": "^3.0.0"
+  }
+}
