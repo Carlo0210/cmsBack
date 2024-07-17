@@ -21,24 +21,6 @@ exports.saveProviders = async (req, res) => {
     }
 };
 
-
-exports.getProviderNpi = async (req, res) => {
-    try {
-        const { npi } = req.params;
-        console.log('NPI received for fetching provider:', npi); // Add this logging statement
-        const provider = await Provider.findOne({ npi });
-        if (!provider) {
-            console.log('Provider not found for NPI:', npi); // Add this logging statement
-            return res.status(404).json({ error: 'Provider not found' });
-        }
-        console.log('Provider found:', provider); // Add this logging statement
-        res.json(provider);
-    } catch (error) {
-        console.error('Error fetching provider:', error); // Add this logging statement
-        res.status(500).send('Error fetching provider');
-    }
-};
-
 exports.getAllSpecialties = async (req, res) => {
     try {
         const specialties = await Provider.distinct('specialty');
@@ -93,7 +75,7 @@ exports.getAllNpis = async (req, res) => {
         const outputPath = path.join(__dirname, 'npis.json');
         fs.writeFileSync(outputPath, JSON.stringify(npiData, null, 2), 'utf-8');
 
-        const chunkSize = Math.ceil(npiValues.length / 17);
+        const chunkSize = Math.ceil(npiValues.length / 12);
 
         for (let i = 0; i < 17; i++) {
             const chunk = npiValues.slice(i * chunkSize, (i + 1) * chunkSize);
@@ -103,6 +85,7 @@ exports.getAllNpis = async (req, res) => {
         }
 
         res.json(npiValues);
+        console.log("successfully created npi file");
     } catch (error) {
         console.error('Error fetching NPIs:', error);
         res.status(500).send('Error fetching NPIs');
@@ -247,3 +230,4 @@ exports.combineData = async (req, res) => {
         res.status(500).send('Error combining data');
     }
 };
+

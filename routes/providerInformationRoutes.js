@@ -14,5 +14,7 @@ router.delete('/providers/:npi', providerInformationController.deleteProvider);
 router.get('/providers', providerInformationController.searchProviders);
 router.post('/providers/:npi/notes', providerInformationController.addProviderNote);
 router.get('/providers/:npi/notes', providerInformationController.getProviderNotes);
+router.get('/providers/notes/attempts/:attempt', providerInformationController.getNotesByNoteAttempts);
+router.get('/providers/notes/default', providerInformationController.getDefaultProviderNotes);
 
 module.exports = router;

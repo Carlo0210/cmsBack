@@ -96,7 +96,6 @@ exports.getAllCities = async (req, res) => {
   };
   
 // providerInformationController.js
-
 exports.searchProviders = async (req, res) => {
     try {
         const { providerName, specialty, state, city } = req.query;
@@ -123,6 +122,7 @@ exports.searchProviders = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 };
+
 exports.addProviderNote = async (req, res) => {
     try {
         const { noteText, noteAttempts } = req.body;
@@ -168,3 +168,77 @@ exports.getProviderNotes = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 };
+
+exports.getNotesByNoteAttempts = async (req, res) => {
+    try {
+        const { attempt } = req.params;
+        const providers = await providerInformation.find({}, 'notes');
+
+        const notes = providers.reduce((acc, provider) => {
+            const filteredNotes = provider.notes.filter(note => note.noteAttempts === attempt);
+            return acc.concat(filteredNotes);
+        }, []);
+
+        if (notes.length === 0) {
+            // If no notes found, return all providers without note values
+            const providersWithoutNotes = providers.filter(provider => provider.notes.length === 0);
+            return res.json(providersWithoutNotes);
+        }
+
+        res.json(notes);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+exports.getDefaultProviderNotes = async (req, res) => {
+    try {
+        const { providerName, specialty, state, city } = req.query;
+
+        // Build the query dynamically based on provided parameters
+        const query = {};
+        if (providerName) {
+            query.providerName = providerName;
+        }
+        if (specialty) {
+            query.specialty = specialty;
+        }
+        if (state) {
+            query['addresses.state'] = state;
+        }
+        if (city) {
+            query['addresses.city'] = city;
+        }
+
+        // Retrieve all matching providers
+        const providers = await providerInformation.find(query);
+
+        if (providers.length === 0) {
+            return res.status(404).json({ message: 'No providers found' });
+        }
+
+        // Get default notes (with no value)
+        const defaultNotes = providers.map(provider => ({
+            npi: provider.npi,
+            providerName: provider.providerName,
+            specialty: provider.specialty,
+            notes: provider.notes.filter(note => !note.noteText || note.noteText.trim() === '')
+        }));
+
+        // Check for providers with default notes
+        const providersWithNotes = defaultNotes.filter(provider => provider.notes.length > 0);
+
+        if (providersWithNotes.length > 0) {
+            return res.json(providersWithNotes);
+        }
+
+        // If no default notes, return all providers without any notes
+        const providersWithoutNotes = providers.filter(provider => provider.notes.length === 0);
+
+        res.json(providersWithoutNotes);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+
