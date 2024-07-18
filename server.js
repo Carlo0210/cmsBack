@@ -31,7 +31,7 @@ const io = require('socket.io')(server, {
 app.use(bodyParser.json({ limit: '1024mb' }));
 app.use(bodyParser.urlencoded({ limit: '1024mb', extended: true }));
 
-app.use('/api', userRoutes);
+app.use('/users', userRoutes);
 app.use('/api', providerRoutes);
 app.use('/api', providerServiceRoutes);
 app.use('/api', providerDetailsRoutes);
