@@ -10,6 +10,7 @@ const providerServiceRoutes = require('./routes/providerServiceRoutes');
 const providerDetailsRoutes = require('./routes/providerDetailsRoutes');
 const combinedProviderRoutes = require('./routes/combinedProviderRoutes');
 const providerInformationRoutes = require('./routes/providerInformationRoutes');
+const path = require('path');
 
 const cors = require('cors');
 require('dotenv').config();
@@ -104,6 +105,15 @@ app.delete('/users/:id', async (req, res) => {
     console.log(e);
     res.status(400).json({ error: 'Failed to delete user.' });
   }
+});
+
+
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, 'frontend/build')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/frontend/build/index.html'));
 });
 
 app.listen(PORT, async () => {
